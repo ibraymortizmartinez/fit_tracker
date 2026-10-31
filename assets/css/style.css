@@ -67,7 +67,7 @@ body {
 }
 
 .badge-pro {
-    background: var(--accent-pink);
+    background: var(--accent-purple);
     color: #fff;
     font-size: 0.65rem;
     padding: 2px 6px;
@@ -78,7 +78,21 @@ body {
 .header-actions {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+}
+
+.btn-mode-toggle {
+    background: rgba(0, 242, 254, 0.08);
+    border: 1px solid var(--accent-cyan);
+    color: var(--accent-cyan);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .xp-badge {
@@ -134,7 +148,7 @@ body {
     transition: 0.2s;
 }
 
-.btn-icon:hover {
+.btn-icon:hover, .btn-icon.active {
     border-color: var(--accent-cyan);
     color: var(--accent-cyan);
 }
@@ -180,6 +194,12 @@ body {
     color: var(--accent-cyan);
 }
 
+.card-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+}
+
 .badge-cyan {
     font-size: 0.75rem;
     background: var(--accent-cyan-glow);
@@ -187,6 +207,59 @@ body {
     padding: 4px 10px;
     border-radius: 6px;
     font-weight: 600;
+}
+
+/* PET CARD */
+.pet-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: linear-gradient(135deg, rgba(15, 19, 34, 1), rgba(30, 38, 64, 0.6));
+    border: 1px solid var(--accent-purple);
+}
+
+.pet-avatar {
+    width: 50px;
+    height: 50px;
+    background: rgba(121, 40, 202, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--accent-purple);
+    box-shadow: 0 0 10px rgba(121, 40, 202, 0.4);
+}
+
+.pet-icon {
+    font-size: 1.5rem;
+    color: #d8b4fe;
+}
+
+.pet-info h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #f8fafc;
+}
+
+.pet-info p {
+    font-size: 0.75rem;
+    color: var(--accent-cyan);
+    font-style: italic;
+}
+
+/* READINESS CARD */
+.readiness-body input[type="range"] {
+    width: 100%;
+    accent-color: var(--accent-cyan);
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+.readiness-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
 }
 
 /* STREAK & HEATMAP */
@@ -209,9 +282,32 @@ body {
     margin-bottom: 12px;
 }
 
+.streak-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.btn-secondary-outline {
+    background: transparent;
+    border: 1px solid var(--card-border);
+    color: var(--text-secondary);
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-secondary-outline:hover {
+    border-color: var(--accent-purple);
+    color: #d8b4fe;
+}
+
 .heatmap-container {
     border-top: 1px solid var(--card-border);
     padding-top: 12px;
+    margin-top: 10px;
 }
 
 .heatmap-title {
@@ -240,6 +336,11 @@ body {
 .heatmap-day.active {
     background: var(--accent-cyan);
     box-shadow: 0 0 6px var(--accent-cyan-glow);
+}
+
+.heatmap-day.rest-day {
+    background: var(--accent-purple);
+    box-shadow: 0 0 6px rgba(121, 40, 202, 0.4);
 }
 
 /* BUTTONS */
@@ -292,6 +393,44 @@ body {
     font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
+}
+
+/* TIME FILTER BAR */
+.time-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    background: #080c14;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--card-border);
+}
+
+.time-filter-bar span {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.time-chips {
+    display: flex;
+    gap: 6px;
+}
+
+.chip {
+    background: #14192b;
+    border: 1px solid var(--card-border);
+    color: var(--text-secondary);
+    padding: 4px 10px;
+    border-radius: 14px;
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+
+.chip.active {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+    background: rgba(0, 242, 254, 0.1);
 }
 
 /* WATER CARD */
@@ -471,6 +610,27 @@ body {
     width: 18px;
     height: 18px;
     cursor: pointer;
+}
+
+.exercise-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.btn-substitute {
+    background: rgba(121, 40, 202, 0.15);
+    border: 1px solid var(--accent-purple);
+    color: #d8b4fe;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+
+.btn-substitute:hover {
+    background: var(--accent-purple);
+    color: #fff;
 }
 
 .exercise-target {

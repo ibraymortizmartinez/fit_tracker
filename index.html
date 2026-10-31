@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberFit Tracker Pro - App de Alto Rendimiento</title>
+    <title>CyberFit Tracker Pro - Inclusive & Universal Edition</title>
     <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
@@ -20,10 +20,18 @@
         <header class="app-header">
             <div class="logo-area">
                 <i class="fa-solid fa-bolt-lightning pulse-icon"></i>
-                <h1>CYBER<span>FIT</span> <span class="badge-pro">PRO</span></h1>
+                <h1>CYBER<span>FIT</span> <span class="badge-pro">UNIVERSAL</span></h1>
             </div>
             
             <div class="header-actions">
+                <!-- Modo de Interfaz (Técnico vs Cotidiano) -->
+                <button class="btn-mode-toggle" id="btn-toggle-mode" title="Cambiar modo de lenguaje (Técnico / Cotidiano)">
+                    <i class="fa-solid fa-sliders"></i> <span id="mode-label">Modo Sencillo</span>
+                </button>
+
+                <!-- Audio-Coach Switcher -->
+                <button class="btn-icon" id="btn-toggle-audio" title="Activar/Desactivar Audio Coach (Voz)"><i class="fa-solid fa-volume-high"></i></button>
+
                 <!-- User XP & Level -->
                 <div class="xp-badge" id="xp-badge-container" title="Puntos de Experiencia Totales">
                     <i class="fa-solid fa-trophy"></i>
@@ -47,9 +55,37 @@
 
         <!-- MAIN DASHBOARD GRID -->
         <main class="dashboard-grid">
-            <!-- PANEL IZQUIERDO: HÁBITOS, RACHA, HIDRATACIÓN Y GAMIFICACIÓN -->
+            <!-- PANEL IZQUIERDO: BATERÍA DIARIA, RACHA ANTI-CULPA, MASCOTA Y HÁBITOS -->
             <section class="left-panel">
-                <!-- Tarjeta de Racha y Matriz Heatmap -->
+
+                <!-- Cyber-Mascota Acompañante Evolutiva -->
+                <div class="card pet-card">
+                    <div class="pet-avatar" id="pet-avatar">
+                        <i class="fa-solid fa-robot pet-icon" id="pet-icon"></i>
+                    </div>
+                    <div class="pet-info">
+                        <h3 id="pet-name">Cyber-Bot v1.0</h3>
+                        <p id="pet-status">"¡Listo para movernos hoy!"</p>
+                    </div>
+                </div>
+
+                <!-- Medidor de Energía Diario (Daily Readiness) -->
+                <div class="card readiness-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-battery-half"></i> Batería del Día</h2>
+                        <span class="badge-cyan" id="readiness-val-display">5/5 (100%)</span>
+                    </div>
+                    <div class="readiness-body">
+                        <p class="card-desc">¿Cómo están tus baterías hoy? Ajusta tu ritmo de entrenamiento automáticamente.</p>
+                        <input type="range" id="readiness-slider" min="1" max="5" value="5" step="1">
+                        <div class="readiness-labels">
+                            <span>😴 Fatigado</span>
+                            <span>⚡ Full Energía</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta de Racha y Anti-Culpa (Safe Rest) -->
                 <div class="card streak-card">
                     <div class="card-header">
                         <h2><i class="fa-solid fa-fire"></i> Racha de Constancia</h2>
@@ -58,11 +94,16 @@
                     <div class="streak-body">
                         <div class="streak-number" id="streak-count">0</div>
                         <p class="streak-label">Días consecutivamente activos</p>
-                        <button class="btn-primary" id="btn-checkin">
-                            <i class="fa-solid fa-check"></i> Registrar Día de Hoy (+50 XP)
-                        </button>
+                        <div class="streak-actions">
+                            <button class="btn-primary" id="btn-checkin">
+                                <i class="fa-solid fa-check"></i> Registrar Día (+50 XP)
+                            </button>
+                            <button class="btn-secondary-outline" id="btn-rest-pass" title="Usar un pase de descanso seguro sin perder la racha">
+                                <i class="fa-solid fa-bed"></i> Descanso Activo (<span id="rest-passes-count">3</span> libres)
+                            </button>
+                        </div>
                     </div>
-                    <!-- Heatmap de Actividad (Últimos 28 Días) -->
+                    <!-- Heatmap de Actividad -->
                     <div class="heatmap-container">
                         <span class="heatmap-title">Actividad Reciente</span>
                         <div class="heatmap-grid" id="heatmap-grid"></div>
@@ -108,12 +149,22 @@
                 </div>
             </section>
 
-            <!-- PANEL DERECHO: CENTRO DE ENTRENAMIENTO & LOGS -->
+            <!-- PANEL DERECHO: CENTRO DE ENTRENAMIENTO, FILTROS POR TIEMPO Y RUTINAS -->
             <section class="right-panel">
                 <div class="card routine-card">
                     <div class="card-header">
                         <h2><i class="fa-solid fa-dumbbell"></i> Centro de Entrenamiento Híbrido</h2>
                         <button class="btn-accent-sm" id="btn-add-exercise-modal"><i class="fa-solid fa-plus"></i> Añadir Ejercicio</button>
+                    </div>
+
+                    <!-- Filtro por Tiempo Disponible (Selector Rápido) -->
+                    <div class="time-filter-bar">
+                        <span><i class="fa-regular fa-clock"></i> Tiempo Disponible:</span>
+                        <div class="time-chips">
+                            <button class="chip active" data-time="all">Sesión Completa</button>
+                            <button class="chip" data-time="15">⚡ Express (15 min)</button>
+                            <button class="chip" data-time="8">🏃 Micro (8 min)</button>
+                        </div>
                     </div>
 
                     <!-- Pestañas de Rutinas -->
@@ -188,7 +239,7 @@
         </div>
     </div>
 
-    <!-- TEMPORIZADOR DE DESCANSO FLOTANTE -->
+    <!-- TEMPORIZADOR DE DESCANSO FLOTANTE CON AUDIO-COACH -->
     <div class="rest-timer-widget" id="rest-timer-widget">
         <div class="timer-display">
             <i class="fa-solid fa-stopwatch"></i>

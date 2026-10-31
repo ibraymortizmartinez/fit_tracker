@@ -1,32 +1,32 @@
 // assets/js/app.js
 document.addEventListener('DOMContentLoaded', () => {
-    // --- ESTADO INICIAL DE LA APLICACIÓN ---
+    // --- RUTINAS POR DEFECTO CON SUSTITUTOS DE ADAPTABILIDAD ---
     const defaultRoutines = {
         push: [
-            { id: 'p1', name: 'Floor Press con mancuernas (20 kg)', target: '4x6-8', sets: [{ weight: 20, reps: 8, rpe: 8 }] },
-            { id: 'p2', name: 'Press Inclinado / Flexiones Declinadas', target: '3x8-10', sets: [{ weight: 15, reps: 10, rpe: 7 }] },
-            { id: 'p3', name: 'Fondos en paralelas', target: '3x Al fallo (-2)', sets: [{ weight: 0, reps: 12, rpe: 9 }] },
-            { id: 'p4', name: 'Press Militar con mancuernas', target: '3x8-10', sets: [{ weight: 14, reps: 10, rpe: 8 }] },
-            { id: 'p5', name: 'Elevaciones laterales', target: '4x12-15', sets: [{ weight: 8, reps: 15, rpe: 9 }] }
+            { id: 'p1', name: 'Floor Press con mancuernas (20 kg)', target: '4x6-8', alt: 'Flexiones declinadas o en pared', express: true, sets: [{ weight: 20, reps: 8, rpe: 8 }] },
+            { id: 'p2', name: 'Press Inclinado / Flexiones', target: '3x8-10', alt: 'Flexiones asistidas con rodillas', express: false, sets: [{ weight: 15, reps: 10, rpe: 7 }] },
+            { id: 'p3', name: 'Fondos en paralelas', target: '3x Al fallo (-2)', alt: 'Fondos en silla de hule o banco', express: false, sets: [{ weight: 0, reps: 12, rpe: 9 }] },
+            { id: 'p4', name: 'Press Militar con mancuernas', target: '3x8-10', alt: 'Elevaciones de brazos sin peso (movilidad)', express: true, sets: [{ weight: 14, reps: 10, rpe: 8 }] },
+            { id: 'p5', name: 'Elevaciones laterales', target: '4x12-15', alt: 'Elevaciones con botellas de agua', express: false, sets: [{ weight: 8, reps: 15, rpe: 9 }] }
         ],
         pull: [
-            { id: 'l1', name: 'Dominadas estrictas en barra fija', target: '4x Máximas', sets: [{ weight: 0, reps: 8, rpe: 9 }] },
-            { id: 'l2', name: 'Remo con mancuerna a una mano', target: '4x8-10', sets: [{ weight: 22, reps: 10, rpe: 8 }] },
-            { id: 'l3', name: 'Curl de bíceps (Spider / Preacher)', target: '4x10-12', sets: [{ weight: 12, reps: 12, rpe: 8 }] }
+            { id: 'l1', name: 'Dominadas estrictas en barra fija', target: '4x Máximas', alt: 'Remo con toalla en puerta', express: true, sets: [{ weight: 0, reps: 8, rpe: 9 }] },
+            { id: 'l2', name: 'Remo con mancuerna a una mano', target: '4x8-10', alt: 'Remo con garrafón de agua', express: true, sets: [{ weight: 22, reps: 10, rpe: 8 }] },
+            { id: 'l3', name: 'Curl de bíceps (Spider / Preacher)', target: '4x10-12', alt: 'Curl con mochila con libros', express: false, sets: [{ weight: 12, reps: 12, rpe: 8 }] }
         ],
         legs: [
-            { id: 'lg1', name: 'Prensa o Sentadilla Goblet', target: '4x10-12', sets: [{ weight: 24, reps: 12, rpe: 8 }] },
-            { id: 'lg2', name: 'Zancadas búlgaras con mancuernas', target: '3x10 por pierna', sets: [{ weight: 10, reps: 10, rpe: 8 }] },
-            { id: 'lg3', name: 'Peso Muerto Rumano', target: '4x10-12', sets: [{ weight: 20, reps: 12, rpe: 7 }] }
+            { id: 'lg1', name: 'Prensa o Sentadilla Goblet', target: '4x10-12', alt: 'Sentadilla a silla sin peso', express: true, sets: [{ weight: 24, reps: 12, rpe: 8 }] },
+            { id: 'lg2', name: 'Zancadas búlgaras con mancuernas', target: '3x10 por pierna', alt: 'Puente de glúteo en suelo (cero rodilla)', express: false, sets: [{ weight: 10, reps: 10, rpe: 8 }] },
+            { id: 'lg3', name: 'Peso Muerto Rumano', target: '4x10-12', alt: 'Buenos días sin peso / Flexión cadera', express: true, sets: [{ weight: 20, reps: 12, rpe: 7 }] }
         ],
         crisol: [
-            { id: 'c1', name: 'Circuito Metabólico - Vuelta 1', target: 'Dominadas + Fondos + Flexiones', sets: [{ weight: 0, reps: 15, rpe: 9 }] },
-            { id: 'c2', name: 'Circuito Metabólico - Vuelta 2', target: 'Dominadas + Fondos + Flexiones', sets: [{ weight: 0, reps: 15, rpe: 9 }] }
+            { id: 'c1', name: 'Circuito Metabólico - Vuelta 1', target: 'Dominadas + Fondos + Flexiones', alt: 'Movilidad continua en silla', express: true, sets: [{ weight: 0, reps: 15, rpe: 9 }] },
+            { id: 'c2', name: 'Circuito Metabólico - Vuelta 2', target: 'Dominadas + Fondos + Flexiones', alt: 'Pausas activas y estiramientos', express: false, sets: [{ weight: 0, reps: 15, rpe: 9 }] }
         ],
         neat: [
-            { id: 'n1', name: 'Ruta Centro ➔ Ávila Camacho', target: '3-4 km con pendientes', sets: [{ km: 3.5, mins: 45, rpe: 5 }] },
-            { id: 'n2', name: 'Caminata nocturna de descarga', target: '30 mins ritmo ligero', sets: [{ km: 2.0, mins: 30, rpe: 4 }] }
-]
+            { id: 'n1', name: 'Ruta Centro ➔ Ávila Camacho', target: '3-4 km con pendientes', alt: 'Caminata en pasillo o jardín', express: true, sets: [{ km: 3.5, mins: 45, rpe: 5 }] },
+            { id: 'n2', name: 'Caminata nocturna de descarga', target: '30 mins ritmo ligero', alt: '10 mins estiramientos en cama', express: false, sets: [{ km: 2.0, mins: 30, rpe: 4 }] }
+        ]
     };
 
     const achievementBadges = [
@@ -36,45 +36,26 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'b_level5', name: 'Cyber Guerrero', icon: 'fa-shield-halved', desc: 'Alcanza el Nivel 5' }
     ];
 
-    let state = JSON.parse(localStorage.getItem('cyberFit_state')) || {
+    // --- ESTADO GLOBAL ---
+    let state = JSON.parse(localStorage.getItem('cyberFit_universal_state')) || {
         streak: { count: 0, lastDate: null, history: {} },
         water: { current: 0, max: 3.0, date: new Date().toDateString(), history: {} },
         notes: '',
         xp: 0,
         level: 1,
+        readiness: 5,
+        restPasses: 3,
+        userMode: 'tech', // 'tech' o 'easy'
+        audioCoach: true,
+        timeFilter: 'all', // 'all', '15', '8'
         unlockedBadges: [],
         completedExercises: {},
         routines: defaultRoutines,
         activeTab: 'push'
     };
 
-    // --- HELPER AUDIO SINTETIZADOR (WEB AUDIO API) ---
-    function playSound(type) {
-        try {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-
-            if (type === 'checkin') {
-                osc.frequency.setValueAtTime(440, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.2);
-                gain.gain.setValueAtTime(0.3, ctx.currentTime);
-                osc.start();
-                osc.stop(ctx.currentTime + 0.2);
-            } else if (type === 'timer_end') {
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(600, ctx.currentTime);
-                gain.gain.setValueAtTime(0.4, ctx.currentTime);
-                osc.start();
-                osc.stop(ctx.currentTime + 0.4);
-            }
-        } catch(e) {}
-    }
-
     function saveState() {
-        localStorage.setItem('cyberFit_state', JSON.stringify(state));
+        localStorage.setItem('cyberFit_universal_state', JSON.stringify(state));
     }
 
     function showToast(msg) {
@@ -84,6 +65,92 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
+    // --- SINTETIZADOR DE VOZ Y AUDIO-COACH ---
+    function speak(text) {
+        if (!state.audioCoach || !('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'es-ES';
+        msg.rate = 1.0;
+        window.speechSynthesis.speak(msg);
+    }
+
+    // --- MODO DE LENGUAJE (TÉCNICO / COTIDIANO) ---
+    const btnToggleMode = document.getElementById('btn-toggle-mode');
+    const modeLabel = document.getElementById('mode-label');
+
+    function renderModeUI() {
+        if (state.userMode === 'easy') {
+            modeLabel.textContent = 'Modo Cotidiano';
+            btnToggleMode.style.borderColor = 'var(--accent-purple)';
+        } else {
+            modeLabel.textContent = 'Modo Técnico';
+            btnToggleMode.style.borderColor = 'var(--accent-cyan)';
+        }
+        renderExercises();
+    }
+
+    btnToggleMode.addEventListener('click', () => {
+        state.userMode = state.userMode === 'tech' ? 'easy' : 'tech';
+        saveState();
+        renderModeUI();
+        speak(`Modo cambiados a ${state.userMode === 'easy' ? 'cotidiano' : 'técnico'}`);
+    });
+
+    // Toggle Audio Coach
+    const btnToggleAudio = document.getElementById('btn-toggle-audio');
+    function updateAudioIcon() {
+        btnToggleAudio.classList.toggle('active', state.audioCoach);
+    }
+    btnToggleAudio.addEventListener('click', () => {
+        state.audioCoach = !state.audioCoach;
+        updateAudioIcon();
+        saveState();
+        showToast(state.audioCoach ? 'Audio Coach Activado 🔊' : 'Audio Coach Silenciado 🔇');
+    });
+    updateAudioIcon();
+
+    // --- CYBER-MASCOTA EVOLUTIVA ---
+    function renderPet() {
+        const nameEl = document.getElementById('pet-name');
+        const statusEl = document.getElementById('pet-status');
+        const iconEl = document.getElementById('pet-icon');
+
+        if (state.level < 3) {
+            nameEl.textContent = 'Cyber-Bot v1.0';
+            iconEl.className = 'fa-solid fa-robot pet-icon';
+            statusEl.textContent = '"¡Dando nuestros primeros pasos!"';
+        } else if (state.level < 5) {
+            nameEl.textContent = 'Cyber-Drone Nvl 2';
+            iconEl.className = 'fa-solid fa-jet-fighter pet-icon';
+            statusEl.textContent = '"¡Potencia al máximo rendimiento!"';
+        } else {
+            nameEl.textContent = 'Cyber-Mecha Leyenda';
+            iconEl.className = 'fa-solid fa-dragon pet-icon';
+            statusEl.textContent = '"¡Nadie puede detenernos!"';
+        }
+    }
+
+    // --- MEDIDOR DE BATERÍA DIARIA (READINESS) ---
+    const readinessSlider = document.getElementById('readiness-slider');
+    const readinessDisplay = document.getElementById('readiness-val-display');
+
+    function renderReadiness() {
+        readinessSlider.value = state.readiness;
+        readinessDisplay.textContent = `${state.readiness}/5 (${state.readiness * 20}%)`;
+    }
+
+    readinessSlider.addEventListener('input', (e) => {
+        state.readiness = parseInt(e.target.value);
+        renderReadiness();
+        saveState();
+        renderExercises();
+        if (state.readiness <= 2) {
+            showToast('Modo Suave Activado: Se ajustaron tus cargas');
+            speak('Batería baja detectada. Ajustamos tus ejercicios para cuidar tu cuerpo.');
+        }
+    });
+
     // --- GAMIFICACIÓN & XP ---
     function addXP(amount) {
         state.xp += amount;
@@ -91,10 +158,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (state.xp >= nextLevelXP) {
             state.level += 1;
             confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-            showToast(`¡SUBISTE DE NIVEL! Ahora eres Nivel ${state.level} 🚀`);
+            speak(`¡Felicidades! Subiste al nivel ${state.level}`);
+            showToast(`¡SUBISTE DE NIVEL! Nivel ${state.level} 🚀`);
         }
         checkBadges();
         renderHeaderXP();
+        renderPet();
         saveState();
     }
 
@@ -141,17 +210,23 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // --- RACHA & HEATMAP ---
+    // --- RACHA & ANTI-CULPA ---
     const btnCheckin = document.getElementById('btn-checkin');
+    const btnRestPass = document.getElementById('btn-rest-pass');
+
     function renderStreak() {
         document.getElementById('streak-count').textContent = state.streak.count;
+        document.getElementById('rest-passes-count').textContent = state.restPasses;
         const todayStr = new Date().toDateString();
+        
         if (state.streak.lastDate === todayStr) {
             btnCheckin.disabled = true;
             btnCheckin.textContent = 'Día Registrado ✓';
+            btnRestPass.disabled = true;
         } else {
             btnCheckin.disabled = false;
-            btnCheckin.innerHTML = '<i class="fa-solid fa-check"></i> Registrar Día de Hoy (+50 XP)';
+            btnCheckin.innerHTML = '<i class="fa-solid fa-check"></i> Registrar Día (+50 XP)';
+            btnRestPass.disabled = state.restPasses <= 0;
         }
         renderHeatmap();
     }
@@ -163,8 +238,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const d = new Date();
             d.setDate(d.getDate() - i);
             const dateStr = d.toISOString().split('T')[0];
-            const active = state.streak.history[dateStr] ? 'active' : '';
-            grid.innerHTML += `<div class="heatmap-day ${active}" title="${dateStr}"></div>`;
+            const status = state.streak.history[dateStr];
+            const classStatus = status === 'active' ? 'active' : (status === 'rest' ? 'rest-day' : '');
+            grid.innerHTML += `<div class="heatmap-day ${classStatus}" title="${dateStr}"></div>`;
         }
     }
 
@@ -173,11 +249,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const isoToday = new Date().toISOString().split('T')[0];
         state.streak.count += 1;
         state.streak.lastDate = todayStr;
-        state.streak.history[isoToday] = true;
-        playSound('checkin');
+        state.streak.history[isoToday] = 'active';
+        speak('¡Día completado! Excelente trabajo de constancia.');
         addXP(50);
         renderStreak();
         showToast('¡Día completado! +50 XP 🔥');
+    });
+
+    btnRestPass.addEventListener('click', () => {
+        if (state.restPasses <= 0) return;
+        const todayStr = new Date().toDateString();
+        const isoToday = new Date().toISOString().split('T')[0];
+        state.streak.count += 1;
+        state.restPasses -= 1;
+        state.streak.lastDate = todayStr;
+        state.streak.history[isoToday] = 'rest';
+        speak('Descanso activo registrado. Cuida tu energía para mañana.');
+        addXP(25);
+        renderStreak();
+        showToast('Descanso Activo guardado sin perder racha 😴');
     });
 
     // --- HIDRATACIÓN ---
@@ -212,16 +302,17 @@ document.addEventListener('DOMContentLoaded', () => {
         saveState();
     });
 
-    // --- BITÁCORA RÁPIDA ---
-    const notesEl = document.getElementById('daily-notes');
-    notesEl.value = state.notes || '';
-    document.getElementById('btn-save-notes').addEventListener('click', () => {
-        state.notes = notesEl.value;
-        saveState();
-        showToast('Nota guardada correctamente 📝');
+    // --- FILTRO DE TIEMPO DISPONIBLE ---
+    document.querySelectorAll('.time-chips .chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            document.querySelectorAll('.time-chips .chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            state.timeFilter = chip.getAttribute('data-time');
+            renderExercises();
+        });
     });
 
-    // --- RUTINAS Y EJERCICIOS (SET LOGGING & CRUD) ---
+    // --- RUTINAS Y EJERCICIOS (UNIVERSAL & SUSTITUCIONES) ---
     const tabButtons = document.querySelectorAll('.tab-btn');
     tabButtons.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -233,55 +324,84 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function renderExercises() {
-    const area = document.getElementById('tab-content-area');
-    const exercises = state.routines[state.activeTab] || [];
-    
-    // Detectamos si la pestaña actual es Cardio/NEAT
-    const isCardio = state.activeTab === 'neat';
+        const area = document.getElementById('tab-content-area');
+        let exercises = state.routines[state.activeTab] || [];
+        const isCardio = state.activeTab === 'neat';
+        const isEasy = state.userMode === 'easy';
 
-    area.innerHTML = exercises.map(ex => {
-        const isCompleted = state.completedExercises[ex.id] || false;
-        return `
-        <div class="exercise-card ${isCompleted ? 'completed' : ''}">
-            <div class="exercise-header">
-                <div class="exercise-title">
-                    <input type="checkbox" ${isCompleted ? 'checked' : ''} onchange="toggleExercise('${ex.id}')">
-                    <span>${ex.name}</span>
+        // Filtrar si está activado Express o Micro
+        if (state.timeFilter === '15') {
+            exercises = exercises.filter(e => e.express);
+        } else if (state.timeFilter === '8') {
+            exercises = exercises.slice(0, 1);
+        }
+
+        area.innerHTML = exercises.map(ex => {
+            const isCompleted = state.completedExercises[ex.id] || false;
+            
+            // Ajustar series por Batería Baja (Readiness)
+            let displaySets = ex.sets || [];
+            if (state.readiness <= 2) {
+                displaySets = displaySets.slice(0, Math.max(1, displaySets.length - 1));
+            }
+
+            return `
+            <div class="exercise-card ${isCompleted ? 'completed' : ''}">
+                <div class="exercise-header">
+                    <div class="exercise-title">
+                        <input type="checkbox" ${isCompleted ? 'checked' : ''} onchange="toggleExercise('${ex.id}')">
+                        <span>${ex.name}</span>
+                    </div>
+                    <div class="exercise-actions">
+                        ${ex.alt ? `<button class="btn-substitute" onclick="substituteExercise('${ex.id}')" title="Sustituir por opción ligera"><i class="fa-solid fa-arrows-rotate"></i> Alternativa</button>` : ''}
+                        <span class="exercise-target">${ex.target}</span>
+                        <button class="btn-del-ex" onclick="deleteExercise('${ex.id}')"><i class="fa-solid fa-trash"></i></button>
+                    </div>
                 </div>
-                <div style="display:flex; gap:10px; align-items:center;">
-                    <span class="exercise-target">${ex.target}</span>
-                    <button class="btn-del-ex" onclick="deleteExercise('${ex.id}')"><i class="fa-solid fa-trash"></i></button>
-                </div>
-            </div>
-            <table class="sets-table">
-                <thead>
-                    <tr>
-                        <th>${isCardio ? 'Sesión' : 'Serie'}</th>
-                        <th>${isCardio ? 'Km' : 'Kg'}</th>
-                        <th>${isCardio ? 'Mins' : 'Reps'}</th>
-                        <th>RPE</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${(ex.sets || []).map((s, idx) => `
+                <table class="sets-table">
+                    <thead>
                         <tr>
-                            <td>#${idx + 1}</td>
-                            <td><input type="number" step="0.1" placeholder="${isCardio ? 'Km' : 'Kg'}" value="${s.weight ?? s.km ?? 0}" onchange="updateSet('${ex.id}', ${idx}, '${isCardio ? 'km' : 'weight'}', this.value)"></td>
-                            <td><input type="number" placeholder="${isCardio ? 'Mins' : 'Reps'}" value="${s.reps ?? s.mins ?? 0}" onchange="updateSet('${ex.id}', ${idx}, '${isCardio ? 'mins' : 'reps'}', this.value)"></td>
-                            <td><input type="number" placeholder="1-10" value="${s.rpe ?? 5}" onchange="updateSet('${ex.id}', ${idx}, 'rpe', this.value)"></td>
+                            <th>${isCardio ? (isEasy ? 'Tramo' : 'Sesión') : (isEasy ? 'Vuelta' : 'Serie')}</th>
+                            <th>${isCardio ? 'Km' : (isEasy ? 'Peso (kg)' : 'Kg')}</th>
+                            <th>${isCardio ? 'Tiempo (min)' : (isEasy ? 'Veces' : 'Reps')}</th>
+                            <th>${isEasy ? 'Cansancio' : 'RPE'}</th>
                         </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-            <button class="btn-add-set" onclick="addSet('${ex.id}')">+ Agregar ${isCardio ? 'Tramo / Sesión' : 'Serie'}</button>
-        </div>`;
-    }).join('');
-}
+                    </thead>
+                    <tbody>
+                        ${displaySets.map((s, idx) => `
+                            <tr>
+                                <td>#${idx + 1}</td>
+                                <td><input type="number" step="0.1" value="${s.weight ?? s.km ?? 0}" onchange="updateSet('${ex.id}', ${idx}, '${isCardio ? 'km' : 'weight'}', this.value)"></td>
+                                <td><input type="number" value="${s.reps ?? s.mins ?? 0}" onchange="updateSet('${ex.id}', ${idx}, '${isCardio ? 'mins' : 'reps'}', this.value)"></td>
+                                <td><input type="number" value="${s.rpe ?? 5}" onchange="updateSet('${ex.id}', ${idx}, 'rpe', this.value)"></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+                <button class="btn-add-set" onclick="addSet('${ex.id}')">+ Agregar ${isCardio ? 'Tramo' : (isEasy ? 'Vuelta' : 'Serie')}</button>
+            </div>`;
+        }).join('');
+    }
+
+    window.substituteExercise = function(id) {
+        const list = state.routines[state.activeTab];
+        const ex = list.find(e => e.id === id);
+        if (ex && ex.alt) {
+            const temp = ex.name;
+            ex.name = ex.alt;
+            ex.alt = temp;
+            saveState();
+            renderExercises();
+            speak(`Ejercicio sustituido por ${ex.name}`);
+            showToast('Ejercicio adaptado correctamente 🔄');
+        }
+    };
 
     window.toggleExercise = function(id) {
         state.completedExercises[id] = !state.completedExercises[id];
         if (state.completedExercises[id]) {
             addXP(20);
+            speak('Ejercicio completado. Tómate un descanso.');
             startRestTimer(60);
         }
         saveState();
@@ -314,7 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderExercises();
     };
 
-    // --- TEMPORIZADOR DE DESCANSO ---
+    // --- TEMPORIZADOR CON AUDIO-COACH ---
     let timerInterval = null;
     let timerTime = 60;
     const timerWidget = document.getElementById('rest-timer-widget');
@@ -329,9 +449,14 @@ document.addEventListener('DOMContentLoaded', () => {
         timerInterval = setInterval(() => {
             timerTime--;
             timerSecs.textContent = timerTime;
+            
+            if (timerTime === 10) {
+                speak('Diez segundos para volver');
+            }
+
             if (timerTime <= 0) {
                 clearInterval(timerInterval);
-                playSound('timer_end');
+                speak('¡Tiempo terminado! Vamos a la siguiente ronda.');
                 showToast('¡Tiempo de descanso finalizado! 🔔');
                 timerWidget.classList.remove('active');
             }
@@ -374,6 +499,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 id: 'custom_' + Date.now(),
                 name: name,
                 target: target || '3x10',
+                alt: 'Opción ligera libre',
+                express: true,
                 sets: [{ weight: 10, reps: 10, rpe: 8 }]
             });
             saveState();
@@ -447,24 +574,11 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.readAsText(file);
     });
 
-    document.getElementById('btn-export-csv').addEventListener('click', () => {
-        let csvContent = "data:text/csv;charset=utf-8,Categoria,Ejercicio,Objetivo\n";
-        Object.keys(state.routines).forEach(cat => {
-            state.routines[cat].forEach(ex => {
-                csvContent += `"${cat}","${ex.name}","${ex.target}"\n`;
-            });
-        });
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "cyberfit_rutinas.csv");
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-    });
-
     // --- INICIALIZACIÓN ---
+    renderModeUI();
     renderHeaderXP();
+    renderPet();
+    renderReadiness();
     renderStreak();
     renderWater();
     renderBadges();

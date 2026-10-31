@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberFit Tracker - Tu App de Alto Rendimiento</title>
+    <!-- CSS Link -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- FontAwesome para Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- HEADER / NAVBAR -->
+        <header class="app-header">
+            <div class="logo-area">
+                <i class="fa-solid fa-bolt-lightning pulse-icon"></i>
+                <h1>CYBER<span>FIT</span> TRACKER</h1>
+            </div>
+            <div class="countdown-badge" id="countdown-badge" title="Cuenta regresiva al 18 de Noviembre">
+                <i class="fa-solid fa-hourglass-half"></i>
+                <span id="countdown-text">Cargando meta...</span>
+            </div>
+        </header>
+
+        <!-- MAIN DASHBOARD GRID -->
+        <main class="dashboard-grid">
+            <!-- PANEL IZQUIERDO: HÁBITOS, RACHA Y AGUA -->
+            <section class="left-panel">
+                <!-- Tarjeta de Racha -->
+                <div class="card streak-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-fire"></i> Racha de Constancia</h2>
+                        <span class="badge-cyan">Modo Activo</span>
+                    </div>
+                    <div class="streak-body">
+                        <div class="streak-number" id="streak-count">0</div>
+                        <p class="streak-label">Días sin romper la cadena</p>
+                        <button class="btn-primary" id="btn-checkin">
+                            <i class="fa-solid fa-check"></i> Registrar Día de Hoy
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tarjeta de Hidratación -->
+                <div class="card water-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-droplet"></i> Hidratación Diaria</h2>
+                        <span id="water-status">0 / 3.0 L</span>
+                    </div>
+                    <div class="water-body">
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="water-progress" style="width: 0%;"></div>
+                        </div>
+                        <div class="water-btns">
+                            <button class="btn-water" data-add="0.25">+250 ml</button>
+                            <button class="btn-water" data-add="0.5">+500 ml</button>
+                            <button class="btn-water" data-add="1.0">+1.0 L</button>
+                            <button class="btn-danger-outline" id="btn-reset-water" title="Reiniciar agua"><i class="fa-solid fa-rotate-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta de Bitácora del Día -->
+                <div class="card notes-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-pen-nib"></i> Bitácora Rápida</h2>
+                    </div>
+                    <div class="notes-body">
+                        <textarea id="daily-notes" placeholder="Apunta tus sensaciones, cargas o notas de hoy..."></textarea>
+                        <button class="btn-secondary" id="btn-save-notes">Guardar Nota</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PANEL DERECHO: RUTINAS Y CENTRO HÍBRIDO -->
+            <section class="right-panel">
+                <div class="card routine-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-dumbbell"></i> Centro de Entrenamiento Híbrido</h2>
+                    </div>
+                    <!-- Pestañas de Rutinas -->
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" data-tab="push">Empuje</button>
+                        <button class="tab-btn" data-tab="pull">Tracción</button>
+                        <button class="tab-btn" data-tab="legs">Pierna</button>
+                        <button class="tab-btn" data-tab="crisol">El Crisol</button>
+                        <button class="tab-btn" data-tab="neat">NEAT / Cardio</button>
+                    </div>
+
+                    <!-- Contenido de las pestañas -->
+                    <div class="tab-content-area">
+                        <!-- PUSH -->
+                        <div class="tab-pane active" id="tab-push">
+                            <h3>Lunes / Empuje (Pecho, Hombro, Tríceps + Core)</h3>
+                            <ul class="exercise-list">
+                                <li><label><input type="checkbox"> Floor Press con mancuernas (20 kg) - 4x6-8</label></li>
+                                <li><label><input type="checkbox"> Press Inclinado / Flexiones Declinadas - 3x8-10</label></li>
+                                <li><label><input type="checkbox"> Fondos en paralelas - 3x Al fallo (-2)</label></li>
+                                <li><label><input type="checkbox"> Press Militar con mancuernas - 3x8-10</label></li>
+                                <li><label><input type="checkbox"> Elevaciones laterales - 4x12-15</label></li>
+                                <li><label><input type="checkbox"> Press Francés en suelo - 3x10-12</label></li>
+                                <li><label><input type="checkbox"> Elevaciones de piernas colgado - 3x10-12</label></li>
+                                <li><label><input type="checkbox"> Plancha abdominal estática - 3x 45-60s</label></li>
+                            </ul>
+                        </div>
+
+                        <!-- PULL -->
+                        <div class="tab-pane" id="tab-pull">
+                            <h3>Jueves / Tracción (Espalda, Bíceps + Core)</h3>
+                            <ul class="exercise-list">
+                                <li><label><input type="checkbox"> Dominadas estrictas en barra fija - 4x Máximas</label></li>
+                                <li><label><input type="checkbox"> Remo con mancuerna a una mano - 4x8-10</label></li>
+                                <li><label><input type="checkbox"> Curl de bíceps (Spider / Preacher / African) - 4x10-12</label></li>
+                                <li><label><input type="checkbox"> Curl martillo con mancuernas - 3x12</label></li>
+                                <li><label><input type="checkbox"> Dragon Flags o abdominales en V - 3x8-10</label></li>
+                            </ul>
+                        </div>
+
+                        <!-- LEGS -->
+                        <div class="tab-pane" id="tab-legs">
+                            <h3>Miércoles o Martes / Tren Inferior (Protección Lumbar)</h3>
+                            <ul class="exercise-list">
+                                <li><label><input type="checkbox"> Prensa o Sentadilla Goblet controlada - 4x10-12</label></li>
+                                <li><label><input type="checkbox"> Zancadas búlgaras con mancuernas - 3x10 por pierna</label></li>
+                                <li><label><input type="checkbox"> Peso Muerto Rumano con mancuernas - 4x10-12</label></li>
+                                <li><label><input type="checkbox"> Elevación de talones (Pantorrilla) - 4x15-20</label></li>
+                                <li><label><input type="checkbox"> Cuerda para saltar (Cardio/Agilidad) - 5 rounds x 2 min</label></li>
+                            </ul>
+                        </div>
+
+                        <!-- CRISOL -->
+                        <div class="tab-pane" id="tab-crisol">
+                            <h3>Sábado / El Crisol (Circuito Metabólico)</h3>
+                            <ul class="exercise-list">
+                                <li><label><input type="checkbox"> Vuelta 1: Dominadas + Fondos + Flexiones + Sentadillas + Plancha</label></li>
+                                <li><label><input type="checkbox"> Vuelta 2: Dominadas + Fondos + Flexiones + Sentadillas + Plancha</label></li>
+                                <li><label><input type="checkbox"> Vuelta 3: Dominadas + Fondos + Flexiones + Sentadillas + Plancha</label></li>
+                                <li><label><input type="checkbox"> Vuelta 4: Dominadas + Fondos + Flexiones + Sentadillas + Plancha</label></li>
+                                <li><label><input type="checkbox"> Vuelta 5: Dominadas + Fondos + Flexiones + Sentadillas + Plancha</label></li>
+                                <li><label><input type="checkbox"> Cierre con Cuerda para saltar (Alta intensidad)</label></li>
+                            </ul>
+                        </div>
+
+                        <!-- NEAT -->
+                        <div class="tab-pane" id="tab-neat">
+                            <h3>NEAT & Caminatas Urbanas (Pachuca)</h3>
+                            <ul class="exercise-list">
+                                <li><label><input type="checkbox"> Ruta Centro ➔ Ávila Camacho (3-4 km con pendientes)</label></li>
+                                <li><label><input type="checkbox"> Ruta Parque Industrial Metropolitano ➔ CBTis 8</label></li>
+                                <li><label><input type="checkbox"> Caminata nocturna de descarga y desestres</label></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="toast">¡Acción guardada con éxito!</div>
+
+    <!-- JS Link -->
+    <script src="assets/js/app.js"></script>
+</body>
+</html>

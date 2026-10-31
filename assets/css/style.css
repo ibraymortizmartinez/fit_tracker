@@ -876,3 +876,41 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--accent-cyan);
 }
+
+/* ACCIONES DEL HEADER DE RUTINA */
+.card-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.routine-selector-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #080c14;
+    border: 1px solid var(--card-border);
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.routine-selector-wrapper i {
+    color: var(--accent-cyan);
+    font-size: 0.85rem;
+}
+
+.select-cyber {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+}
+
+.select-cyber option {
+    background: var(--card-bg);
+    color: var(--text-primary);
+}

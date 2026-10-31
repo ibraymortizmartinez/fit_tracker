@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberFit Tracker Pro - Inclusive & Universal Edition</title>
+    <title>Fit Tracker Pro - Inclusive & Universal Edition</title>
     <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
@@ -20,7 +20,7 @@
         <header class="app-header">
             <div class="logo-area">
                 <i class="fa-solid fa-bolt-lightning pulse-icon"></i>
-                <h1>CYBER<span>FIT</span> <span class="badge-pro">UNIVERSAL</span></h1>
+                <h1>FIT <span class="badge-pro">UNIVERSAL</span></h1>
             </div>
             
             <div class="header-actions">
@@ -150,12 +150,29 @@
             </section>
 
             <!-- PANEL DERECHO: CENTRO DE ENTRENAMIENTO, FILTROS POR TIEMPO Y RUTINAS -->
-            <section class="right-panel">
-                <div class="card routine-card">
-                    <div class="card-header">
-                        <h2><i class="fa-solid fa-dumbbell"></i> Centro de Entrenamiento Híbrido</h2>
-                        <button class="btn-accent-sm" id="btn-add-exercise-modal"><i class="fa-solid fa-plus"></i> Añadir Ejercicio</button>
-                    </div>
+<section class="right-panel">
+    <div class="card routine-card">
+        <div class="card-header">
+            <h2><i class="fa-solid fa-dumbbell"></i> Centro de Entrenamiento Híbrido</h2>
+            
+            <div class="card-header-actions">
+                <!-- Selector de Esquema / Rutina -->
+                <div class="routine-selector-wrapper">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <select id="routine-template-select" class="select-cyber">
+                        <option value="ppl">PPL (Empuje / Tracción / Pierna)</option>
+                        <option value="torso_pierna">Torso / Pierna (4 Días)</option>
+                        <option value="full_body">Full Body (3 Días)</option>
+                        <option value="arnold">Arnold Split (6 Días)</option>
+                        <option value="calistenia">Calistenia Pura (Sin Equipo)</option>
+                    </select>
+                </div>
+
+                <button class="btn-accent-sm" id="btn-add-exercise-modal">
+                    <i class="fa-solid fa-plus"></i> Añadir Ejercicio
+                </button>
+            </div>
+        </div>
 
                     <!-- Filtro por Tiempo Disponible (Selector Rápido) -->
                     <div class="time-filter-bar">

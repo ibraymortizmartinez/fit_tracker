@@ -11,7 +11,7 @@
     --success: #10b981;
 }
 
-* {
+*{
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -350,3 +350,40 @@ body {
     transform: translateY(0);
     opacity: 1;
 }
+
+/* Estado tachado para tareas marcadas */
+.exercise-list label:has(input[type="checkbox"]:checked) {
+    text-decoration: line-through;
+    color: var(--text-secondary);
+    opacity: 0.65;
+}
+
+/* Botón deshabilitado */
+.btn-primary:disabled,
+.btn-primary.disabled {
+    background: var(--card-border);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.6;
+}
+
+/* Scrollbar personalizado estilo Neón */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--card-border);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-cyan);
+}
+

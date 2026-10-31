@@ -1,15 +1,18 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberFit Tracker - Tu App de Alto Rendimiento</title>
-    <!-- CSS Link -->
-    <link rel="stylesheet" href="assets/css/style.css">
-    <!-- FontAwesome para Iconos -->
+    <title>CyberFit Tracker Pro - App de Alto Rendimiento</title>
+    <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js & Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
     <div class="app-container">
@@ -17,30 +20,52 @@
         <header class="app-header">
             <div class="logo-area">
                 <i class="fa-solid fa-bolt-lightning pulse-icon"></i>
-                <h1>CYBER<span>FIT</span> TRACKER</h1>
+                <h1>CYBER<span>FIT</span> <span class="badge-pro">PRO</span></h1>
             </div>
-            <div class="countdown-badge" id="countdown-badge" title="Cuenta regresiva al 18 de Noviembre">
-                <i class="fa-solid fa-hourglass-half"></i>
-                <span id="countdown-text">Cargando meta...</span>
+            
+            <div class="header-actions">
+                <!-- User XP & Level -->
+                <div class="xp-badge" id="xp-badge-container" title="Puntos de Experiencia Totales">
+                    <i class="fa-solid fa-trophy"></i>
+                    <span>Nvl <strong id="user-level">1</strong></span>
+                    <div class="xp-bar-mini"><div class="xp-fill-mini" id="xp-fill-mini" style="width: 0%;"></div></div>
+                </div>
+
+                <!-- Countdown -->
+                <div class="countdown-badge" id="countdown-badge" title="Cuenta regresiva al 18 de Noviembre">
+                    <i class="fa-solid fa-hourglass-half"></i>
+                    <span id="countdown-text">Cargando meta...</span>
+                </div>
+
+                <!-- Backup & Settings -->
+                <button class="btn-icon" id="btn-export-json" title="Exportar Respaldo JSON"><i class="fa-solid fa-download"></i></button>
+                <label for="import-json-input" class="btn-icon" title="Importar Respaldo JSON"><i class="fa-solid fa-upload"></i></label>
+                <input type="file" id="import-json-input" accept=".json" style="display: none;">
+                <button class="btn-icon" id="btn-toggle-stats" title="Ver Analíticas e Histórico"><i class="fa-solid fa-chart-line"></i></button>
             </div>
         </header>
 
         <!-- MAIN DASHBOARD GRID -->
         <main class="dashboard-grid">
-            <!-- PANEL IZQUIERDO: HÁBITOS, RACHA Y AGUA -->
+            <!-- PANEL IZQUIERDO: HÁBITOS, RACHA, HIDRATACIÓN Y GAMIFICACIÓN -->
             <section class="left-panel">
-                <!-- Tarjeta de Racha -->
+                <!-- Tarjeta de Racha y Matriz Heatmap -->
                 <div class="card streak-card">
                     <div class="card-header">
                         <h2><i class="fa-solid fa-fire"></i> Racha de Constancia</h2>
-                        <span class="badge-cyan">Modo Activo</span>
+                        <span class="badge-cyan" id="streak-status-badge">Modo Activo</span>
                     </div>
                     <div class="streak-body">
                         <div class="streak-number" id="streak-count">0</div>
-                        <p class="streak-label">Días sin romper la cadena</p>
+                        <p class="streak-label">Días consecutivamente activos</p>
                         <button class="btn-primary" id="btn-checkin">
-                            <i class="fa-solid fa-check"></i> Registrar Día de Hoy
+                            <i class="fa-solid fa-check"></i> Registrar Día de Hoy (+50 XP)
                         </button>
+                    </div>
+                    <!-- Heatmap de Actividad (Últimos 28 Días) -->
+                    <div class="heatmap-container">
+                        <span class="heatmap-title">Actividad Reciente</span>
+                        <div class="heatmap-grid" id="heatmap-grid"></div>
                     </div>
                 </div>
 
@@ -48,39 +73,49 @@
                 <div class="card water-card">
                     <div class="card-header">
                         <h2><i class="fa-solid fa-droplet"></i> Hidratación Diaria</h2>
-                        <span id="water-status">0 / 3.0 L</span>
+                        <span id="water-status">0.00 / 3.0 L</span>
                     </div>
                     <div class="water-body">
                         <div class="progress-bar-container">
                             <div class="progress-bar" id="water-progress" style="width: 0%;"></div>
                         </div>
                         <div class="water-btns">
-                            <button class="btn-water" data-add="0.25">+250 ml</button>
-                            <button class="btn-water" data-add="0.5">+500 ml</button>
-                            <button class="btn-water" data-add="1.0">+1.0 L</button>
+                            <button class="btn-water" data-add="0.25">+250ml</button>
+                            <button class="btn-water" data-add="0.50">+500ml</button>
+                            <button class="btn-water" data-add="1.00">+1.0L</button>
                             <button class="btn-danger-outline" id="btn-reset-water" title="Reiniciar agua"><i class="fa-solid fa-rotate-right"></i></button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Tarjeta de Bitácora del Día -->
+                <!-- Tarjeta de Insignias / Logros -->
+                <div class="card badges-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-award"></i> Logros Desbloqueados</h2>
+                    </div>
+                    <div class="badges-grid" id="badges-grid"></div>
+                </div>
+
+                <!-- Tarjeta de Bitácora Rápida -->
                 <div class="card notes-card">
                     <div class="card-header">
                         <h2><i class="fa-solid fa-pen-nib"></i> Bitácora Rápida</h2>
                     </div>
                     <div class="notes-body">
-                        <textarea id="daily-notes" placeholder="Apunta tus sensaciones, cargas o notas de hoy..."></textarea>
+                        <textarea id="daily-notes" placeholder="Apunta sensaciones, cargas o notas de hoy..."></textarea>
                         <button class="btn-secondary" id="btn-save-notes">Guardar Nota</button>
                     </div>
                 </div>
             </section>
 
-            <!-- PANEL DERECHO: RUTINAS Y CENTRO HÍBRIDO -->
+            <!-- PANEL DERECHO: CENTRO DE ENTRENAMIENTO & LOGS -->
             <section class="right-panel">
                 <div class="card routine-card">
                     <div class="card-header">
                         <h2><i class="fa-solid fa-dumbbell"></i> Centro de Entrenamiento Híbrido</h2>
+                        <button class="btn-accent-sm" id="btn-add-exercise-modal"><i class="fa-solid fa-plus"></i> Añadir Ejercicio</button>
                     </div>
+
                     <!-- Pestañas de Rutinas -->
                     <div class="tab-buttons">
                         <button class="tab-btn active" data-tab="push">Empuje</button>
@@ -90,79 +125,86 @@
                         <button class="tab-btn" data-tab="neat">NEAT / Cardio</button>
                     </div>
 
-                    <!-- Contenido de las pestañas -->
-                    <div class="tab-content-area">
-                        <!-- PUSH -->
-                        <div class="tab-pane active" id="tab-push">
-                            <h3>Lunes / Empuje (Pecho, Hombro, Tríceps + Core)</h3>
-                            <ul class="exercise-list">
-                                <li><label><input type="checkbox"> Floor Press con mancuernas (20 kg) - 4x6-8</label></li>
-                                <li><label><input type="checkbox"> Press Inclinado / Flexiones Declinadas - 3x8-10</label></li>
-                                <li><label><input type="checkbox"> Fondos en paralelas - 3x Al fallo (-2)</label></li>
-                                <li><label><input type="checkbox"> Press Militar con mancuernas - 3x8-10</label></li>
-                                <li><label><input type="checkbox"> Elevaciones laterales - 4x12-15</label></li>
-                                <li><label><input type="checkbox"> Press Francés en suelo - 3x10-12</label></li>
-                                <li><label><input type="checkbox"> Elevaciones de piernas colgado - 3x10-12</label></li>
-                                <li><label><input type="checkbox"> Plancha abdominal estática - 3x 45-60s</label></li>
-                            </ul>
-                        </div>
-
-                        <!-- PULL -->
-                        <div class="tab-pane" id="tab-pull">
-                            <h3>Jueves / Tracción (Espalda, Bíceps + Core)</h3>
-                            <ul class="exercise-list">
-                                <li><label><input type="checkbox"> Dominadas estrictas en barra fija - 4x Máximas</label></li>
-                                <li><label><input type="checkbox"> Remo con mancuerna a una mano - 4x8-10</label></li>
-                                <li><label><input type="checkbox"> Curl de bíceps (Spider / Preacher / African) - 4x10-12</label></li>
-                                <li><label><input type="checkbox"> Curl martillo con mancuernas - 3x12</label></li>
-                                <li><label><input type="checkbox"> Dragon Flags o abdominales en V - 3x8-10</label></li>
-                            </ul>
-                        </div>
-
-                        <!-- LEGS -->
-                        <div class="tab-pane" id="tab-legs">
-                            <h3>Miércoles o Martes / Tren Inferior (Protección Lumbar)</h3>
-                            <ul class="exercise-list">
-                                <li><label><input type="checkbox"> Prensa o Sentadilla Goblet controlada - 4x10-12</label></li>
-                                <li><label><input type="checkbox"> Zancadas búlgaras con mancuernas - 3x10 por pierna</label></li>
-                                <li><label><input type="checkbox"> Peso Muerto Rumano con mancuernas - 4x10-12</label></li>
-                                <li><label><input type="checkbox"> Elevación de talones (Pantorrilla) - 4x15-20</label></li>
-                                <li><label><input type="checkbox"> Cuerda para saltar (Cardio/Agilidad) - 5 rounds x 2 min</label></li>
-                            </ul>
-                        </div>
-
-                        <!-- CRISOL -->
-                        <div class="tab-pane" id="tab-crisol">
-                            <h3>Sábado / El Crisol (Circuito Metabólico)</h3>
-                            <ul class="exercise-list">
-                                <li><label><input type="checkbox"> Vuelta 1: Dominadas + Fondos + Flexiones + Sentadillas + Plancha</label></li>
-                                <li><label><input type="checkbox"> Vuelta 2: Dominadas + Fondos + Flexiones + Sentadillas + Plancha</label></li>
-                                <li><label><input type="checkbox"> Vuelta 3: Dominadas + Fondos + Flexiones + Sentadillas + Plancha</label></li>
-                                <li><label><input type="checkbox"> Vuelta 4: Dominadas + Fondos + Flexiones + Sentadillas + Plancha</label></li>
-                                <li><label><input type="checkbox"> Vuelta 5: Dominadas + Fondos + Flexiones + Sentadillas + Plancha</label></li>
-                                <li><label><input type="checkbox"> Cierre con Cuerda para saltar (Alta intensidad)</label></li>
-                            </ul>
-                        </div>
-
-                        <!-- NEAT -->
-                        <div class="tab-pane" id="tab-neat">
-                            <h3>NEAT & Caminatas Urbanas (Pachuca)</h3>
-                            <ul class="exercise-list">
-                                <li><label><input type="checkbox"> Ruta Centro ➔ Ávila Camacho (3-4 km con pendientes)</label></li>
-                                <li><label><input type="checkbox"> Ruta Parque Industrial Metropolitano ➔ CBTis 8</label></li>
-                                <li><label><input type="checkbox"> Caminata nocturna de descarga y desestres</label></li>
-                            </ul>
-                        </div>
-                    </div>
+                    <!-- Contenedor Dinámico de Ejercicios -->
+                    <div class="tab-content-area" id="tab-content-area"></div>
                 </div>
             </section>
         </main>
     </div>
 
+    <!-- MODAL DE ESTADÍSTICAS Y GRÁFICAS -->
+    <div class="modal-overlay" id="modal-stats">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2><i class="fa-solid fa-chart-line"></i> Analíticas de Rendimiento Pro</h2>
+                <button class="btn-close" id="btn-close-stats">&times;</button>
+            </div>
+            <div class="modal-body grid-2col">
+                <div class="chart-box">
+                    <h3>Volumen de Cargas por Sesión (kg)</h3>
+                    <canvas id="chart-volume"></canvas>
+                </div>
+                <div class="chart-box">
+                    <h3>Histórico de Hidratación (Litros)</h3>
+                    <canvas id="chart-water"></canvas>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="btn-export-csv"><i class="fa-solid fa-file-csv"></i> Exportar Historial a CSV</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PARA AÑADIR EJERCICIO NUEVO -->
+    <div class="modal-overlay" id="modal-add-exercise">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fa-solid fa-folder-plus"></i> Nuevo Ejercicio</h2>
+                <button class="btn-close" id="btn-close-add-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Categoría / Pestaña</label>
+                    <select id="new-ex-tab">
+                        <option value="push">Empuje</option>
+                        <option value="pull">Tracción</option>
+                        <option value="legs">Pierna</option>
+                        <option value="crisol">El Crisol</option>
+                        <option value="neat">NEAT / Cardio</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Nombre del Ejercicio</label>
+                    <input type="text" id="new-ex-name" placeholder="Ej: Press Banca Plano">
+                </div>
+                <div class="form-group">
+                    <label>Objetivo / Prescripción (ej: 4x8-10)</label>
+                    <input type="text" id="new-ex-target" placeholder="Ej: 4x8-10 (20kg)">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" id="btn-save-new-exercise">Añadir a la Rutina</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TEMPORIZADOR DE DESCANSO FLOTANTE -->
+    <div class="rest-timer-widget" id="rest-timer-widget">
+        <div class="timer-display">
+            <i class="fa-solid fa-stopwatch"></i>
+            <span id="timer-seconds">60</span>s
+        </div>
+        <div class="timer-controls">
+            <button id="btn-timer-add10">+10s</button>
+            <button id="btn-timer-toggle"><i class="fa-solid fa-pause"></i></button>
+            <button id="btn-timer-close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+    </div>
+
     <!-- TOAST NOTIFICATION -->
     <div id="toast" class="toast">¡Acción guardada con éxito!</div>
 
-    <!-- JS Link -->
+    <!-- App Logic Script -->
     <script src="assets/js/app.js"></script>
 </body>
 </html>

@@ -1,175 +1,13 @@
 // assets/js/app.js
+import { state, saveState, showToast } from './state.js';
+import { routinePresets, achievementBadges } from './presets.js';
+import { speak } from './audio.js';
+import { initCharts } from './charts.js';
+import { exportToExcel } from './excel.js';
+
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. DICCIONARIO COMPLETO DE PLANTILLAS DE ENTRENAMIENTO ---
-    const routinePresets = {
-        ppl: {
-            tabs: ['push', 'pull', 'legs', 'crisol', 'neat'],
-            tabLabels: { push: 'Empuje', pull: 'Tracción', legs: 'Pierna', crisol: 'El Crisol', neat: 'NEAT / Cardio' },
-            data: {
-                push: [
-                    { id: 'p1', name: 'Floor Press con mancuernas (20 kg)', target: '4x6-8', alt: 'Flexiones declinadas o en pared', express: true, sets: [{ weight: 20, reps: 8, rpe: 8 }] },
-                    { id: 'p2', name: 'Press Inclinado / Flexiones', target: '3x8-10', alt: 'Flexiones asistidas con rodillas', express: false, sets: [{ weight: 15, reps: 10, rpe: 7 }] },
-                    { id: 'p3', name: 'Fondos en paralelas', target: '3x Al fallo (-2)', alt: 'Fondos en silla de hule o banco', express: false, sets: [{ weight: 0, reps: 12, rpe: 9 }] },
-                    { id: 'p4', name: 'Press Militar con mancuernas', target: '3x8-10', alt: 'Elevaciones de brazos sin peso (movilidad)', express: true, sets: [{ weight: 14, reps: 10, rpe: 8 }] },
-                    { id: 'p5', name: 'Elevaciones laterales', target: '4x12-15', alt: 'Elevaciones con botellas de agua', express: false, sets: [{ weight: 8, reps: 15, rpe: 9 }] }
-                ],
-                pull: [
-                    { id: 'l1', name: 'Dominadas estrictas en barra fija', target: '4x Máximas', alt: 'Remo con toalla en puerta', express: true, sets: [{ weight: 0, reps: 8, rpe: 9 }] },
-                    { id: 'l2', name: 'Remo con mancuerna a una mano', target: '4x8-10', alt: 'Remo con garrafón de agua', express: true, sets: [{ weight: 22, reps: 10, rpe: 8 }] },
-                    { id: 'l3', name: 'Curl de bíceps (Spider / Preacher)', target: '4x10-12', alt: 'Curl con mochila con libros', express: false, sets: [{ weight: 12, reps: 12, rpe: 8 }] }
-                ],
-                legs: [
-                    { id: 'lg1', name: 'Prensa o Sentadilla Goblet', target: '4x10-12', alt: 'Sentadilla a silla sin peso', express: true, sets: [{ weight: 24, reps: 12, rpe: 8 }] },
-                    { id: 'lg2', name: 'Zancadas búlgaras con mancuernas', target: '3x10 por pierna', alt: 'Puente de glúteo en suelo (cero rodilla)', express: false, sets: [{ weight: 10, reps: 10, rpe: 8 }] },
-                    { id: 'lg3', name: 'Peso Muerto Rumano', target: '4x10-12', alt: 'Buenos días sin peso / Flexión cadera', express: true, sets: [{ weight: 20, reps: 12, rpe: 7 }] }
-                ],
-                crisol: [
-                    { id: 'c1', name: 'Circuito Metabólico - Vuelta 1', target: 'Dominadas + Fondos + Flexiones', alt: 'Movilidad continua en silla', express: true, sets: [{ weight: 0, reps: 15, rpe: 9 }] },
-                    { id: 'c2', name: 'Circuito Metabólico - Vuelta 2', target: 'Dominadas + Fondos + Flexiones', alt: 'Pausas activas y estiramientos', express: false, sets: [{ weight: 0, reps: 15, rpe: 9 }] }
-                ],
-                neat: [
-                    { id: 'n1', name: 'Ruta Centro ➔ Ávila Camacho', target: '3-4 km con pendientes', alt: 'Caminata en pasillo o jardín', express: true, sets: [{ km: 3.5, mins: 45, rpe: 5 }] },
-                    { id: 'n2', name: 'Caminata nocturna de descarga', target: '30 mins ritmo ligero', alt: '10 mins estiramientos en cama', express: false, sets: [{ km: 2.0, mins: 30, rpe: 4 }] }
-                ]
-            }
-        },
-        torso_pierna: {
-            tabs: ['torso1', 'pierna1', 'torso2', 'pierna2', 'neat'],
-            tabLabels: { torso1: 'Torso A', pierna1: 'Pierna A', torso2: 'Torso B', pierna2: 'Pierna B', neat: 'NEAT / Cardio' },
-            data: {
-                torso1: [
-                    { id: 'tp_t1', name: 'Press Banca / Floor Press', target: '4x8-10', alt: 'Flexiones en suelo', express: true, sets: [{ weight: 20, reps: 10, rpe: 8 }] },
-                    { id: 'tp_t2', name: 'Remo con Mancuerna', target: '4x8-10', alt: 'Remo invertido en mesa', express: true, sets: [{ weight: 22, reps: 10, rpe: 8 }] }
-                ],
-                pierna1: [
-                    { id: 'tp_p1', name: 'Sentadilla Goblet', target: '4x10-12', alt: 'Sentadilla libre sin peso', express: true, sets: [{ weight: 24, reps: 10, rpe: 8 }] },
-                    { id: 'tp_p2', name: 'Peso Muerto Rumano', target: '4x10-12', alt: 'Flexión de cadera postural', express: true, sets: [{ weight: 20, reps: 12, rpe: 7 }] }
-                ],
-                torso2: [
-                    { id: 'tp_t3', name: 'Press Militar', target: '4x8-10', alt: 'Elevaciones de hombro sin carga', express: true, sets: [{ weight: 14, reps: 8, rpe: 8 }] },
-                    { id: 'tp_t4', name: 'Dominadas / Jalón', target: '4x8-10', alt: 'Remo con banda elástica', express: true, sets: [{ weight: 0, reps: 8, rpe: 8 }] }
-                ],
-                pierna2: [
-                    { id: 'tp_p3', name: 'Zancadas con Peso', target: '3x10 por pierna', alt: 'Zancadas fijas sin peso', express: true, sets: [{ weight: 12, reps: 10, rpe: 8 }] }
-                ],
-                neat: [
-                    { id: 'tp_n1', name: 'Caminata de Descarga', target: '30 mins', alt: 'Estiramientos suaves', express: true, sets: [{ km: 2.5, mins: 30, rpe: 4 }] }
-                ]
-            }
-        },
-        full_body: {
-            tabs: ['sessionA', 'sessionB', 'sessionC', 'neat'],
-            tabLabels: { sessionA: 'Día 1 (Full)', sessionB: 'Día 2 (Full)', sessionC: 'Día 3 (Full)', neat: 'NEAT / Cardio' },
-            data: {
-                sessionA: [
-                    { id: 'fb_1', name: 'Sentadilla Goblet', target: '3x8-10', alt: 'Sentadilla a silla', express: true, sets: [{ weight: 20, reps: 10, rpe: 8 }] },
-                    { id: 'fb_2', name: 'Floor Press con Mancuernas', target: '3x8-10', alt: 'Flexiones en suelo', express: true, sets: [{ weight: 20, reps: 10, rpe: 8 }] },
-                    { id: 'fb_3', name: 'Remo a una mano', target: '3x10', alt: 'Remo con garrafón', express: true, sets: [{ weight: 18, reps: 10, rpe: 8 }] }
-                ],
-                sessionB: [
-                    { id: 'fb_4', name: 'Peso Muerto Rumano', target: '3x10', alt: 'Puente de glúteo', express: true, sets: [{ weight: 20, reps: 10, rpe: 7 }] },
-                    { id: 'fb_5', name: 'Press Militar', target: '3x10', alt: 'Flexiones pino asistidas', express: true, sets: [{ weight: 12, reps: 10, rpe: 8 }] },
-                    { id: 'fb_6', name: 'Dominadas / Remo', target: '3x Máximas', alt: 'Remo con toalla', express: true, sets: [{ weight: 0, reps: 8, rpe: 8 }] }
-                ],
-                sessionC: [
-                    { id: 'fb_7', name: 'Zancadas con peso', target: '3x12', alt: 'Zancadas libres', express: true, sets: [{ weight: 12, reps: 12, rpe: 8 }] },
-                    { id: 'fb_8', name: 'Fondos en paralelas', target: '3x Al fallo', alt: 'Fondos en banco', express: true, sets: [{ weight: 0, reps: 10, rpe: 9 }] }
-                ],
-                neat: [
-                    { id: 'fb_n1', name: 'Cardio Ligero', target: '20 mins', alt: 'Caminata rítmica', express: true, sets: [{ km: 2.0, mins: 20, rpe: 5 }] }
-                ]
-            }
-        },
-        arnold: {
-            tabs: ['chest_back', 'shoulders_arms', 'legs_arnold', 'neat'],
-            tabLabels: { chest_back: 'Pecho + Espalda', shoulders_arms: 'Hombro + Brazo', legs_arnold: 'Pierna', neat: 'NEAT / Cardio' },
-            data: {
-                chest_back: [
-                    { id: 'arn_1', name: 'Floor Press + Remo con Mancuerna', target: '4x8-10', alt: 'Flexiones + Remo', express: true, sets: [{ weight: 20, reps: 10, rpe: 9 }] }
-                ],
-                shoulders_arms: [
-                    { id: 'arn_2', name: 'Press Militar + Curl Bíceps', target: '4x10-12', alt: 'Elevaciones + Curl con botellas', express: true, sets: [{ weight: 12, reps: 12, rpe: 8 }] }
-                ],
-                legs_arnold: [
-                    { id: 'arn_3', name: 'Sentadillas + Peso Muerto', target: '4x10', alt: 'Sentadilla libre + Puente', express: true, sets: [{ weight: 24, reps: 10, rpe: 8 }] }
-                ],
-                neat: [
-                    { id: 'arn_n1', name: 'Caminata Urbana', target: '30 mins', alt: 'Caminata ligera', express: true, sets: [{ km: 3.0, mins: 30, rpe: 5 }] }
-                ]
-            }
-        },
-        calistenia: {
-            tabs: ['push_cali', 'pull_cali', 'legs_cali', 'core_cali'],
-            tabLabels: { push_cali: 'Empuje Corporal', pull_cali: 'Tracción Corporal', legs_cali: 'Piernas / Salto', core_cali: 'Core / Abdominales' },
-            data: {
-                push_cali: [
-                    { id: 'cal_1', name: 'Flexiones strictly en suelo', target: '4x12-15', alt: 'Flexiones apoyando rodillas', express: true, sets: [{ weight: 0, reps: 15, rpe: 8 }] },
-                    { id: 'cal_2', name: 'Fondos entre sillas', target: '3x10-12', alt: 'Fondos en suelo', express: true, sets: [{ weight: 0, reps: 12, rpe: 8 }] }
-                ],
-                pull_cali: [
-                    { id: 'cal_3', name: 'Dominadas en barra fija', target: '4x Máximas', alt: 'Remo invertido bajo mesa', express: true, sets: [{ weight: 0, reps: 8, rpe: 9 }] }
-                ],
-                legs_cali: [
-                    { id: 'cal_5', name: 'Sentadillas con salto explosivas', target: '4x15', alt: 'Sentadillas fluidas sin salto', express: true, sets: [{ weight: 0, reps: 15, rpe: 8 }] }
-                ],
-                core_cali: [
-                    { id: 'cal_7', name: 'Plancha abdominal estática', target: '3x 45s', alt: 'Plancha apoyando rodillas', express: true, sets: [{ weight: 0, reps: 45, rpe: 8 }] }
-                ]
-            }
-        }
-    };
-
-    const achievementBadges = [
-        { id: 'b_first', name: 'Primer Paso', icon: 'fa-shoe-prints', desc: 'Registra tu primer día' },
-        { id: 'b_streak7', name: '7 Días Invicto', icon: 'fa-fire-flame-curved', desc: 'Racha de 7 días' },
-        { id: 'b_water', name: 'Tanque de Agua', icon: 'fa-faucet-drip', desc: 'Alcanza 3.0L de agua' },
-        { id: 'b_level5', name: 'Cyber Guerrero', icon: 'fa-shield-halved', desc: 'Alcanza el Nivel 5' }
-    ];
-
-    // --- 2. ESTADO GLOBAL ---
-    let state = JSON.parse(localStorage.getItem('cyberFit_universal_state')) || {
-        streak: { count: 0, lastDate: null, history: {} },
-        water: { current: 0, max: 3.0, date: new Date().toDateString(), history: {} },
-        notes: '',
-        xp: 0,
-        level: 1,
-        readiness: 5,
-        restPasses: 3,
-        userMode: 'tech', // 'tech' o 'easy'
-        audioCoach: true,
-        timeFilter: 'all', // 'all', '15', '8'
-        selectedRoutine: 'ppl',
-        unlockedBadges: [],
-        completedExercises: {},
-        routines: routinePresets.ppl.data,
-        activeTab: 'push'
-    };
-
-    function saveState() {
-        localStorage.setItem('cyberFit_universal_state', JSON.stringify(state));
-    }
-
-    function showToast(msg) {
-        const toast = document.getElementById('toast');
-        if (toast) {
-            toast.textContent = msg;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
-    }
-
-    // --- 3. SINTETIZADOR DE VOZ Y AUDIO-COACH ---
-    function speak(text) {
-        if (!state.audioCoach || !('speechSynthesis' in window)) return;
-        window.speechSynthesis.cancel();
-        const msg = new SpeechSynthesisUtterance(text);
-        msg.lang = 'es-ES';
-        msg.rate = 1.0;
-        window.speechSynthesis.speak(msg);
-    }
-
-    // --- 4. MODO DE LENGUAJE (TÉCNICO / COTIDIANO) ---
+    // --- MODO DE LENGUAJE ---
     const btnToggleMode = document.getElementById('btn-toggle-mode');
     const modeLabel = document.getElementById('mode-label');
 
@@ -194,12 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Toggle Audio Coach
+    // Toggle Audio
     const btnToggleAudio = document.getElementById('btn-toggle-audio');
     function updateAudioIcon() {
-        if (btnToggleAudio) {
-            btnToggleAudio.classList.toggle('active', state.audioCoach);
-        }
+        if (btnToggleAudio) btnToggleAudio.classList.toggle('active', state.audioCoach);
     }
     if (btnToggleAudio) {
         btnToggleAudio.addEventListener('click', () => {
@@ -211,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateAudioIcon();
     }
 
-    // --- 5. CYBER-MASCOTA EVOLUTIVA ---
+    // --- MASCOTA EVOLUTIVA ---
     function renderPet() {
         const nameEl = document.getElementById('pet-name');
         const statusEl = document.getElementById('pet-status');
@@ -233,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- 6. MEDIDOR DE BATERÍA DIARIA (READINESS) ---
+    // --- READINESS (BATERÍA) ---
     const readinessSlider = document.getElementById('readiness-slider');
     const readinessDisplay = document.getElementById('readiness-val-display');
 
@@ -256,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 7. GAMIFICACIÓN & XP ---
+    // --- GAMIFICACIÓN & XP ---
     function addXP(amount) {
         state.xp += amount;
         const nextLevelXP = state.level * 100;
@@ -305,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }).join('');
     }
 
-    // --- 8. CUENTA REGRESIVA ---
+    // --- CUENTA REGRESIVA ---
     const targetDate = new Date('November 18, 2026 00:00:00').getTime();
     function updateCountdown() {
         const cdText = document.getElementById('countdown-text');
@@ -324,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // --- 9. RACHA & ANTI-CULPA ---
+    // --- RACHA Y ANTI-CULPA ---
     const btnCheckin = document.getElementById('btn-checkin');
     const btnRestPass = document.getElementById('btn-rest-pass');
 
@@ -335,7 +171,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (passesCountEl) passesCountEl.textContent = state.restPasses;
         
         const todayStr = new Date().toDateString();
-        
         if (btnCheckin) {
             if (state.streak.lastDate === todayStr) {
                 btnCheckin.disabled = true;
@@ -394,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 10. HIDRATACIÓN ---
+    // --- HIDRATACIÓN ---
     const todayStr = new Date().toDateString();
     if (state.water.date !== todayStr) {
         state.water.current = 0;
@@ -431,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 11. FILTRO DE TIEMPO DISPONIBLE ---
+    // --- FILTRO DE TIEMPO DISPONIBLE ---
     document.querySelectorAll('.time-chips .chip').forEach(chip => {
         chip.addEventListener('click', () => {
             document.querySelectorAll('.time-chips .chip').forEach(c => c.classList.remove('active'));
@@ -441,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- 12. GESTIÓN DE RUTINAS, PESTAÑAS Y EJERCICIOS ---
+    // --- RUTINAS Y PESTAÑAS DINÁMICAS ---
     function renderDynamicTabs(preset) {
         const tabContainer = document.querySelector('.tab-buttons');
         if (!tabContainer) return;
@@ -484,6 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- RENDERIZADO COMPLETO DE EJERCICIOS Y TABLAS DE SERIES ---
     function renderExercises() {
         const area = document.getElementById('tab-content-area');
         if (!area) return;
@@ -544,7 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }).join('');
     }
 
-    // Metodos Globales vinculados al HTML
+    // --- REGISTRO GLOBAL DE FUNCIONES PARA EL ONCLICK DE HTML (ES MODULES) ---
     window.substituteExercise = function(id) {
         const list = state.routines[state.activeTab];
         if (!list) return;
@@ -600,7 +436,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderExercises();
     };
 
-    // --- 13. TEMPORIZADOR DE DESCANSO ---
+    // --- TEMPORIZADOR DE DESCANSO ---
     let timerInterval = null;
     let timerTime = 60;
     const timerWidget = document.getElementById('rest-timer-widget');
@@ -616,11 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
         timerInterval = setInterval(() => {
             timerTime--;
             timerSecs.textContent = timerTime;
-            
-            if (timerTime === 10) {
-                speak('Diez segundos para volver');
-            }
-
+            if (timerTime === 10) speak('Diez segundos para volver');
             if (timerTime <= 0) {
                 clearInterval(timerInterval);
                 speak('¡Tiempo terminado! Vamos a la siguiente ronda.');
@@ -630,147 +462,69 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
 
-    const btnTimerAdd10 = document.getElementById('btn-timer-add10');
-    const btnTimerToggle = document.getElementById('btn-timer-toggle');
-    const btnTimerClose = document.getElementById('btn-timer-close');
-
-    if (btnTimerAdd10) btnTimerAdd10.addEventListener('click', () => timerTime += 10);
-    if (btnTimerToggle) {
-        btnTimerToggle.addEventListener('click', () => {
-            if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-            } else {
-                startRestTimer(timerTime);
-            }
-        });
-    }
-    if (btnTimerClose) {
-        btnTimerClose.addEventListener('click', () => {
+    document.getElementById('btn-timer-add10')?.addEventListener('click', () => timerTime += 10);
+    document.getElementById('btn-timer-toggle')?.addEventListener('click', () => {
+        if (timerInterval) {
             clearInterval(timerInterval);
-            if (timerWidget) timerWidget.classList.remove('active');
-        });
-    }
+            timerInterval = null;
+        } else {
+            startRestTimer(timerTime);
+        }
+    });
+    document.getElementById('btn-timer-close')?.addEventListener('click', () => {
+        clearInterval(timerInterval);
+        if (timerWidget) timerWidget.classList.remove('active');
+    });
 
-    // --- 14. MODALES, GRÁFICAS Y EXPORTACIÓN ---
+    // --- MODALES, GRÁFICAS Y EXPORTACIÓN ---
     const modalStats = document.getElementById('modal-stats');
     const modalAdd = document.getElementById('modal-add-exercise');
-    const btnToggleStats = document.getElementById('btn-toggle-stats');
-    const btnCloseStats = document.getElementById('btn-close-stats');
-    const btnAddModal = document.getElementById('btn-add-exercise-modal');
-    const btnCloseAddModal = document.getElementById('btn-close-add-modal');
 
-    if (btnToggleStats) {
-        btnToggleStats.addEventListener('click', () => {
-            if (modalStats) modalStats.classList.add('active');
-            initCharts();
-        });
-    }
-    if (btnCloseStats && modalStats) btnCloseStats.addEventListener('click', () => modalStats.classList.remove('active'));
-    if (btnAddModal && modalAdd) btnAddModal.addEventListener('click', () => modalAdd.classList.add('active'));
-    if (btnCloseAddModal && modalAdd) btnCloseAddModal.addEventListener('click', () => modalAdd.classList.remove('active'));
+    document.getElementById('btn-toggle-stats')?.addEventListener('click', () => {
+        if (modalStats) modalStats.classList.add('active');
+        initCharts();
+    });
+    document.getElementById('btn-close-stats')?.addEventListener('click', () => modalStats?.classList.remove('active'));
 
-    const btnSaveNewEx = document.getElementById('btn-save-new-exercise');
-    if (btnSaveNewEx) {
-        btnSaveNewEx.addEventListener('click', () => {
-            const tab = document.getElementById('new-ex-tab').value;
-            const name = document.getElementById('new-ex-name').value.trim();
-            const target = document.getElementById('new-ex-target').value.trim();
-
-            if (name) {
-                if (!state.routines[tab]) state.routines[tab] = [];
-                state.routines[tab].push({
-                    id: 'custom_' + Date.now(),
-                    name: name,
-                    target: target || '3x10',
-                    alt: 'Opción ligera libre',
-                    express: true,
-                    sets: [{ weight: 10, reps: 10, rpe: 8 }]
-                });
-                saveState();
-                if (modalAdd) modalAdd.classList.remove('active');
-                renderExercises();
-                showToast('Ejercicio añadido con éxito');
-            }
-        });
-    }
-
-    let chartVolInstance = null;
-    let chartWaterInstance = null;
-
-    function initCharts() {
-        if (typeof Chart === 'undefined') return;
-        if (chartVolInstance) chartVolInstance.destroy();
-        if (chartWaterInstance) chartWaterInstance.destroy();
-
-        const canvasVol = document.getElementById('chart-volume');
-        if (canvasVol) {
-            chartVolInstance = new Chart(canvasVol.getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: ['Empuje', 'Tracción', 'Pierna', 'Crisol'],
-                    datasets: [{
-                        label: 'Volumen Estimado (kg)',
-                        data: [1200, 1450, 1800, 950],
-                        backgroundColor: '#00f2fe'
-                    }]
-                },
-                options: { responsive: true, plugins: { legend: { labels: { color: '#f8fafc' } } } }
-            });
+    document.getElementById('btn-add-exercise-modal')?.addEventListener('click', () => {
+        const currentPresetKey = state.selectedRoutine || 'ppl';
+        const currentPreset = routinePresets[currentPresetKey] || routinePresets.ppl;
+        const selectTab = document.getElementById('new-ex-tab');
+        if (selectTab) {
+            selectTab.innerHTML = currentPreset.tabs.map(tabKey => `
+                <option value="${tabKey}">${currentPreset.tabLabels[tabKey] || tabKey}</option>
+            `).join('');
         }
+        modalAdd?.classList.add('active');
+    });
+    document.getElementById('btn-close-add-modal')?.addEventListener('click', () => modalAdd?.classList.remove('active'));
 
-        const canvasWater = document.getElementById('chart-water');
-        if (canvasWater) {
-            chartWaterInstance = new Chart(canvasWater.getContext('2d'), {
-                type: 'line',
-                data: {
-                    labels: Object.keys(state.water.history).slice(-7),
-                    datasets: [{
-                        label: 'Litros Consumidos',
-                        data: Object.values(state.water.history).slice(-7),
-                        borderColor: '#4facfe',
-                        tension: 0.3
-                    }]
-                },
-                options: { responsive: true, plugins: { legend: { labels: { color: '#f8fafc' } } } }
+    document.getElementById('btn-save-new-exercise')?.addEventListener('click', () => {
+        const tab = document.getElementById('new-ex-tab').value;
+        const name = document.getElementById('new-ex-name').value.trim();
+        const target = document.getElementById('new-ex-target').value.trim();
+
+        if (name) {
+            if (!state.routines[tab]) state.routines[tab] = [];
+            state.routines[tab].push({
+                id: 'custom_' + Date.now(),
+                name: name,
+                target: target || '3x10',
+                alt: 'Opción ligera libre',
+                express: true,
+                sets: [{ weight: 10, reps: 10, rpe: 8 }]
             });
+            saveState();
+            modalAdd?.classList.remove('active');
+            renderExercises();
+            showToast('Ejercicio añadido con éxito');
         }
-    }
+    });
 
-    // Respaldo JSON y CSV
-    const btnExportJson = document.getElementById('btn-export-json');
-    if (btnExportJson) {
-        btnExportJson.addEventListener('click', () => {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
-            const anchor = document.createElement('a');
-            anchor.setAttribute("href", dataStr);
-            anchor.setAttribute("download", `cyberfit_backup_${new Date().toISOString().split('T')[0]}.json`);
-            document.body.appendChild(anchor);
-            anchor.click();
-            anchor.remove();
-        });
-    }
+    document.getElementById('btn-export-excel')?.addEventListener('click', exportToExcel);
+    document.getElementById('btn-export-excel-modal')?.addEventListener('click', exportToExcel);
 
-    const inputImportJson = document.getElementById('import-json-input');
-    if (inputImportJson) {
-        inputImportJson.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                try {
-                    state = JSON.parse(event.target.result);
-                    saveState();
-                    location.reload();
-                } catch(err) {
-                    showToast('Archivo JSON inválido');
-                }
-            };
-            reader.readAsText(file);
-        });
-    }
-
-    // --- 15. INICIALIZACIÓN COMPLETA DE LA APLICACIÓN ---
+    // --- INICIALIZACIÓN COMPLETA ---
     renderModeUI();
     renderHeaderXP();
     renderPet();
@@ -779,13 +533,9 @@ document.addEventListener('DOMContentLoaded', () => {
     renderWater();
     renderBadges();
 
-    // Sincronizar el selector visual con la rutina guardada
     const currentPresetKey = state.selectedRoutine || 'ppl';
-    if (routineSelect) {
-        routineSelect.value = currentPresetKey;
-    }
+    if (routineSelect) routineSelect.value = currentPresetKey;
     
-    // Cargar la plantilla activa y construir las pestañas
     const activePreset = routinePresets[currentPresetKey] || routinePresets.ppl;
     renderDynamicTabs(activePreset);
     renderExercises();

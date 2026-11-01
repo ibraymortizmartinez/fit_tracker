@@ -1,6 +1,6 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,12 +8,19 @@
     <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+    
     <!-- Chart.js & Confetti CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <!-- CDNs para exportación a Excel (.xlsx) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
     <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
+
 <body>
     <div class="app-container">
         <!-- HEADER / NAVBAR -->
@@ -22,7 +29,7 @@
                 <i class="fa-solid fa-bolt-lightning pulse-icon"></i>
                 <h1>FIT <span class="badge-pro">UNIVERSAL</span></h1>
             </div>
-            
+
             <div class="header-actions">
                 <!-- Modo de Interfaz (Técnico vs Cotidiano) -->
                 <button class="btn-mode-toggle" id="btn-toggle-mode" title="Cambiar modo de lenguaje (Técnico / Cotidiano)">
@@ -30,13 +37,17 @@
                 </button>
 
                 <!-- Audio-Coach Switcher -->
-                <button class="btn-icon" id="btn-toggle-audio" title="Activar/Desactivar Audio Coach (Voz)"><i class="fa-solid fa-volume-high"></i></button>
+                <button class="btn-icon" id="btn-toggle-audio" title="Activar/Desactivar Audio Coach (Voz)">
+                    <i class="fa-solid fa-volume-high"></i>
+                </button>
 
                 <!-- User XP & Level -->
                 <div class="xp-badge" id="xp-badge-container" title="Puntos de Experiencia Totales">
                     <i class="fa-solid fa-trophy"></i>
                     <span>Nvl <strong id="user-level">1</strong></span>
-                    <div class="xp-bar-mini"><div class="xp-fill-mini" id="xp-fill-mini" style="width: 0%;"></div></div>
+                    <div class="xp-bar-mini">
+                        <div class="xp-fill-mini" id="xp-fill-mini" style="width: 0%;"></div>
+                    </div>
                 </div>
 
                 <!-- Countdown -->
@@ -45,11 +56,15 @@
                     <span id="countdown-text">Cargando meta...</span>
                 </div>
 
-                <!-- Backup & Settings -->
-                <button class="btn-icon" id="btn-export-json" title="Exportar Respaldo JSON"><i class="fa-solid fa-download"></i></button>
-                <label for="import-json-input" class="btn-icon" title="Importar Respaldo JSON"><i class="fa-solid fa-upload"></i></label>
-                <input type="file" id="import-json-input" accept=".json" style="display: none;">
-                <button class="btn-icon" id="btn-toggle-stats" title="Ver Analíticas e Histórico"><i class="fa-solid fa-chart-line"></i></button>
+                <!-- Botón de Exportación a Excel en Header -->
+                <button class="btn-icon" id="btn-export-excel" title="Exportar Reporte Excel (.xlsx)">
+                    <i class="fa-solid fa-file-excel"></i>
+                </button>
+
+                <!-- Botón para ver Estadísticas y Gráficas -->
+                <button class="btn-icon" id="btn-toggle-stats" title="Ver Analíticas Pro">
+                    <i class="fa-solid fa-chart-pie"></i>
+                </button>
             </div>
         </header>
 
@@ -124,7 +139,9 @@
                             <button class="btn-water" data-add="0.25">+250ml</button>
                             <button class="btn-water" data-add="0.50">+500ml</button>
                             <button class="btn-water" data-add="1.00">+1.0L</button>
-                            <button class="btn-danger-outline" id="btn-reset-water" title="Reiniciar agua"><i class="fa-solid fa-rotate-right"></i></button>
+                            <button class="btn-danger-outline" id="btn-reset-water" title="Reiniciar agua">
+                                <i class="fa-solid fa-rotate-right"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -150,29 +167,29 @@
             </section>
 
             <!-- PANEL DERECHO: CENTRO DE ENTRENAMIENTO, FILTROS POR TIEMPO Y RUTINAS -->
-<section class="right-panel">
-    <div class="card routine-card">
-        <div class="card-header">
-            <h2><i class="fa-solid fa-dumbbell"></i> Centro de Entrenamiento Híbrido</h2>
-            
-            <div class="card-header-actions">
-                <!-- Selector de Esquema / Rutina -->
-                <div class="routine-selector-wrapper">
-                    <i class="fa-solid fa-layer-group"></i>
-                    <select id="routine-template-select" class="select-cyber">
-                        <option value="ppl">PPL (Empuje / Tracción / Pierna)</option>
-                        <option value="torso_pierna">Torso / Pierna (4 Días)</option>
-                        <option value="full_body">Full Body (3 Días)</option>
-                        <option value="arnold">Arnold Split (6 Días)</option>
-                        <option value="calistenia">Calistenia Pura (Sin Equipo)</option>
-                    </select>
-                </div>
+            <section class="right-panel">
+                <div class="card routine-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-dumbbell"></i> Centro de Entrenamiento Híbrido</h2>
 
-                <button class="btn-accent-sm" id="btn-add-exercise-modal">
-                    <i class="fa-solid fa-plus"></i> Añadir Ejercicio
-                </button>
-            </div>
-        </div>
+                        <div class="card-header-actions">
+                            <!-- Selector de Esquema / Rutina -->
+                            <div class="routine-selector-wrapper">
+                                <i class="fa-solid fa-layer-group"></i>
+                                <select id="routine-template-select" class="select-cyber">
+                                    <option value="ppl">PPL (Empuje / Tracción / Pierna)</option>
+                                    <option value="torso_pierna">Torso / Pierna (4 Días)</option>
+                                    <option value="full_body">Full Body (3 Días)</option>
+                                    <option value="arnold">Arnold Split (6 Días)</option>
+                                    <option value="calistenia">Calistenia Pura (Sin Equipo)</option>
+                                </select>
+                            </div>
+
+                            <button class="btn-accent-sm" id="btn-add-exercise-modal">
+                                <i class="fa-solid fa-plus"></i> Añadir Ejercicio
+                            </button>
+                        </div>
+                    </div>
 
                     <!-- Filtro por Tiempo Disponible (Selector Rápido) -->
                     <div class="time-filter-bar">
@@ -184,14 +201,8 @@
                         </div>
                     </div>
 
-                    <!-- Pestañas de Rutinas -->
-                    <div class="tab-buttons">
-                        <button class="tab-btn active" data-tab="push">Empuje</button>
-                        <button class="tab-btn" data-tab="pull">Tracción</button>
-                        <button class="tab-btn" data-tab="legs">Pierna</button>
-                        <button class="tab-btn" data-tab="crisol">El Crisol</button>
-                        <button class="tab-btn" data-tab="neat">NEAT / Cardio</button>
-                    </div>
+                    <!-- Pestañas de Rutinas (Renderizadas Dinámicamente) -->
+                    <div class="tab-buttons"></div>
 
                     <!-- Contenedor Dinámico de Ejercicios -->
                     <div class="tab-content-area" id="tab-content-area"></div>
@@ -218,7 +229,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn-secondary" id="btn-export-csv"><i class="fa-solid fa-file-csv"></i> Exportar Historial a CSV</button>
+                <button class="btn-secondary" id="btn-export-excel-modal">
+                    <i class="fa-solid fa-file-excel"></i> Exportar Reporte Pro a Excel (.xlsx)
+                </button>
             </div>
         </div>
     </div>
@@ -233,13 +246,7 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label>Categoría / Pestaña</label>
-                    <select id="new-ex-tab">
-                        <option value="push">Empuje</option>
-                        <option value="pull">Tracción</option>
-                        <option value="legs">Pierna</option>
-                        <option value="crisol">El Crisol</option>
-                        <option value="neat">NEAT / Cardio</option>
-                    </select>
+                    <select id="new-ex-tab"></select>
                 </div>
                 <div class="form-group">
                     <label>Nombre del Ejercicio</label>
@@ -272,7 +279,7 @@
     <!-- TOAST NOTIFICATION -->
     <div id="toast" class="toast">¡Acción guardada con éxito!</div>
 
-    <!-- App Logic Script -->
-    <script src="assets/js/app.js"></script>
+    <script type="module" src="assets/js/app.js"></script>
 </body>
+
 </html>

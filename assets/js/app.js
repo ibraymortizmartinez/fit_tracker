@@ -2,8 +2,10 @@
 import { state, saveState, showToast } from './state.js';
 import { routinePresets, achievementBadges } from './presets.js';
 import { speak } from './audio.js';
-import { initCharts } from './charts.js';
+import { initCharts, showExerciseHistory } from './charts.js';
 import { exportToExcel } from './excel.js';
+import { initThemeSwitcher } from './theme.js';
+import { initNutrition } from './nutrition.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -350,6 +352,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span>${ex.name}</span>
                     </div>
                     <div class="exercise-actions">
+                        <button class="btn-substitute" onclick="showExerciseHistory('${ex.id}')" title="Ver Histórico Pro">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </button>
                         ${ex.alt ? `<button class="btn-substitute" onclick="substituteExercise('${ex.id}')" title="Sustituir por opción ligera"><i class="fa-solid fa-arrows-rotate"></i> Alternativa</button>` : ''}
                         <span class="exercise-target">${ex.target}</span>
                         <button class="btn-del-ex" onclick="deleteExercise('${ex.id}')"><i class="fa-solid fa-trash"></i></button>
@@ -479,12 +484,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- MODALES, GRÁFICAS Y EXPORTACIÓN ---
     const modalStats = document.getElementById('modal-stats');
     const modalAdd = document.getElementById('modal-add-exercise');
+    const modalExHistory = document.getElementById('modal-ex-history');
 
     document.getElementById('btn-toggle-stats')?.addEventListener('click', () => {
         if (modalStats) modalStats.classList.add('active');
         initCharts();
     });
     document.getElementById('btn-close-stats')?.addEventListener('click', () => modalStats?.classList.remove('active'));
+    document.getElementById('btn-close-ex-history')?.addEventListener('click', () => modalExHistory?.classList.remove('active'));
 
     document.getElementById('btn-add-exercise-modal')?.addEventListener('click', () => {
         const currentPresetKey = state.selectedRoutine || 'ppl';
@@ -532,6 +539,8 @@ document.addEventListener('DOMContentLoaded', () => {
     renderStreak();
     renderWater();
     renderBadges();
+    initThemeSwitcher();
+    initNutrition();
 
     const currentPresetKey = state.selectedRoutine || 'ppl';
     if (routineSelect) routineSelect.value = currentPresetKey;

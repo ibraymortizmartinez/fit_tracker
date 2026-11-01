@@ -914,3 +914,40 @@ body {
     background: var(--card-bg);
     color: var(--text-primary);
 }
+
+/* TEMAS DE PALETA NEÓN */
+:root, [data-theme="cyberpunk"] {
+    --bg-main: #0B0F19;
+    --card-bg: #131B2E;
+    --accent-cyan: #00f2fe;
+    --accent-purple: #9d4edd;
+    --accent-glow: rgba(0, 242, 254, 0.2);
+    --border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="matrix"] {
+    --bg-main: #050E07;
+    --card-bg: #0B1E10;
+    --accent-cyan: #00ff66;
+    --accent-purple: #008f11;
+    --accent-glow: rgba(0, 255, 102, 0.2);
+    --border-color: rgba(0, 255, 102, 0.15);
+}
+
+[data-theme="synthwave"] {
+    --bg-main: #12091B;
+    --card-bg: #211033;
+    --accent-cyan: #ff007f;
+    --accent-purple: #7928ca;
+    --accent-glow: rgba(255, 0, 127, 0.25);
+    --border-color: rgba(255, 0, 127, 0.15);
+}
+
+[data-theme="gold"] {
+    --bg-main: #121008;
+    --card-bg: #211C0C;
+    --accent-cyan: #ffb703;
+    --accent-purple: #fb8500;
+    --accent-glow: rgba(255, 183, 3, 0.25);
+    --border-color: rgba(255, 183, 3, 0.15);
+}

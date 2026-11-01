@@ -41,6 +41,16 @@
                     <i class="fa-solid fa-volume-high"></i>
                 </button>
 
+                <!-- Selector de Tema Neón -->
+                <button class="btn-icon" id="btn-toggle-theme" title="Cambiar Tema Neón">
+                    <i class="fa-solid fa-palette"></i>
+                </button>
+
+                <!-- Control de Suplementación y Macros -->
+                <button class="btn-icon" id="btn-toggle-nutrition" title="Control de Suplementación y Macros">
+                    <i class="fa-solid fa-capsules"></i>
+                </button>
+
                 <!-- User XP & Level -->
                 <div class="xp-badge" id="xp-badge-container" title="Puntos de Experiencia Totales">
                     <i class="fa-solid fa-trophy"></i>
@@ -232,6 +242,65 @@
                 <button class="btn-secondary" id="btn-export-excel-modal">
                     <i class="fa-solid fa-file-excel"></i> Exportar Reporte Pro a Excel (.xlsx)
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE HISTÓRICO INDIVIDUAL POR EJERCICIO -->
+    <div class="modal-overlay" id="modal-ex-history">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-ex-title"><i class="fa-solid fa-chart-line"></i> Histórico de Cargas</h2>
+                <button class="btn-close" id="btn-close-ex-history">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="chart-box">
+                    <canvas id="chart-ex-history"></canvas>
+                </div>
+                <div class="ex-stats-summary" id="ex-history-summary" style="margin-top: 15px; color: #94a3b8; font-size: 0.9rem;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL INDEPENDIENTE: NUTRICIÓN Y SUPLEMENTOS -->
+    <div class="modal-overlay" id="modal-nutrition">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2><i class="fa-solid fa-capsules"></i> Control de Suplementación & Macros</h2>
+                <button class="btn-close" id="btn-close-nutrition">&times;</button>
+            </div>
+            <div class="modal-body grid-2col">
+                <!-- CHECKLIST SUPLEMENTACIÓN -->
+                <div class="card shadow-sm">
+                    <h3><i class="fa-solid fa-pills"></i> Suplementos Diarios</h3>
+                    <ul class="supps-list" id="supps-checklist" style="list-style: none; padding: 0; margin-top: 15px;">
+                        <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="supp-creatine" onchange="toggleSupp('creatine')">
+                            <label for="supp-creatine">Creatina Monohidratada (5g)</label>
+                        </li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="supp-protein" onchange="toggleSupp('protein')">
+                            <label for="supp-protein">Proteína aislada Whey (1 scoop)</label>
+                        </li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="supp-omega3" onchange="toggleSupp('omega3')">
+                            <label for="supp-omega3">Omega 3 / Vitaminas</label>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- REGISTRO DE MACROS RÁPIDOS -->
+                <div class="card shadow-sm">
+                    <h3><i class="fa-solid fa-utensils"></i> Macros Rápidos</h3>
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label>Proteína (g) / Meta: <span id="prot-target-display">160g</span></label>
+                        <input type="number" id="input-macro-prot" placeholder="Ej: 140" onchange="updateMacro('prot', this.value)">
+                    </div>
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label>Calorías (kcal) / Meta: <span id="cal-target-display">2400 kcal</span></label>
+                        <input type="number" id="input-macro-cal" placeholder="Ej: 2200" onchange="updateMacro('cal', this.value)">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
